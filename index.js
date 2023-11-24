@@ -19,7 +19,6 @@ const pool = new Pool({
 
 
 
-
 //MIDDELWARE
 const apiKeyValidation = (req, res, next) => {
     const userApiValdation = req.get('x-variable-api');
@@ -32,6 +31,9 @@ const apiKeyValidation = (req, res, next) => {
     }
 };
 
+app.get('/', (req, res) => {
+    return res.send('Funciona');
+});
 
 app.get('/students', (req,res) => {
 
