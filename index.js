@@ -3,7 +3,7 @@ const app=express();
 const port= process.env.PORT;
 app.use(express.json());
 const { Pool } = require('pg');
-require('dotenv').config();
+//require('dotenv').config();
 const apiKey = process.env.API_KEY;
 app.listen(port,() => console.log('The app is running, Arrow Function')); //Arrow Function
 
