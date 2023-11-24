@@ -32,6 +32,7 @@ const pool = new Pool({
 app.get('/', (req, res) => {
     return res.send('Funciona');
 });
+app.use(apiKeyValidation);
 
 app.get('/students', (req,res) => {
 
