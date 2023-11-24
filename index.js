@@ -8,17 +8,6 @@ const apiKey = process.env.API_KEY;
 app.listen(port,() => console.log('The app is running, Arrow Function')); //Arrow Function
 
 
-const pool = new Pool({
-    user: 'default',
-    host: 'ep-dry-tooth-23959130.us-east-1.postgres.vercel-storage.com',
-    database: 'verceldb',
-    password: 'JdsM4QUkf7et',
-    port: 5432,
-    ssl: {rejectUnauthorized: false}
-});
-
-
-
 //MIDDELWARE
 const apiKeyValidation = (req, res, next) => {
     const userApiValdation = req.get('x-variable-api');
@@ -31,13 +20,28 @@ const apiKeyValidation = (req, res, next) => {
     }
 };
 
+const pool = new Pool({
+    user: 'default',
+    host: 'ep-dry-tooth-23959130.us-east-1.postgres.vercel-storage.com',
+    database: 'verceldb',
+    password: 'JdsM4QUkf7et',
+    port: 5432,
+    ssl: {rejectUnauthorized: false}
+});
+
 app.get('/', (req, res) => {
     return res.send('Funciona');
 });
 
 app.get('/students', (req,res) => {
 
-    const listUsersQuery = `SELECT * FROM students;`;
+    const listUsersQuery = `CREATE TABLE students (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(50),
+        lastname VARCHAR(50),
+        notes TEXT
+    );`;
+    // const listUsersQuery = `SELECT * FROM students;`;
 
     pool.query(listUsersQuery)
         .then(data => {
