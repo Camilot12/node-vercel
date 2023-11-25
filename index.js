@@ -18,7 +18,7 @@ const pool = new Pool({
 const API_KEY = process.env.API_KEY;
 
 const apiKeyValidation = (req, res, next) => {
-    const userApiKey = req.get('USER_API_KEY');
+    const userApiKey = req.get('API_KEY');
     if(userApiKey && userApiKey === API_KEY) {
         next();
     }
