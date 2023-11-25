@@ -1,145 +1,57 @@
 const express=require('express');
 const app=express();
-const port= process.env.PORT;
+const port=process.env.PORT;
 app.use(express.json());
+app.listen(port,() => console.log('the app is running'));
+
 const { Pool } = require('pg');
-//require('dotenv').config();
-const apiKey = process.env.API_KEY;
-app.listen(port,() => console.log('The app is running, Arrow Function')); //Arrow Function
 
+const pool = new Pool({
+    user:'default',
+    host:'ep-dry-tooth-23959130.us-east-1.postgres.vercel-storage.com', 
+    database:'verceldb',
+    password:'JdsM4QUkf7et',
+    port:5432,
+    ssl:{rejectUnauthorized: false}
+});
 
-//MIDDELWARE
+const API_KEY = process.env.PORT;
+
 const apiKeyValidation = (req, res, next) => {
-    const userApiValdation = req.get('x-variable-api');
-    if(userApiValdation && userApiValdation === apiKey) {
-        res.send('successful');
+    const userApiKey = req.get('USER_API_KEY');
+    if(userApiKey && userApiKey === API_KEY) {
         next();
     }
     else {
         res.status(401).send('Invalid API Key')
     }
-};
+}
 
-const pool = new Pool({
-    user: 'default',
-    host: 'ep-dry-tooth-23959130.us-east-1.postgres.vercel-storage.com',
-    database: 'verceldb',
-    password: 'JdsM4QUkf7et',
-    port: 5432,
-    ssl: {rejectUnauthorized: false}
-});
-
-app.get('/', (req, res) => {
-    return res.send('Funciona');
-});
 app.use(apiKeyValidation);
 
-app.get('/students', (req,res) => {
-
-    const listUsersQuery = `CREATE TABLE students (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(50),
-        lastname VARCHAR(50),
-        notes TEXT
-    );`;
-    // const listUsersQuery = `SELECT * FROM students;`;
-
-    pool.query(listUsersQuery)
-        .then(data => {
-          console.log("List students: ", data.rows);
-          res.send(data.rows);
-          
-        })
-        .catch(err => {
-            console.error(err);
-            
-    });
+app.get('/products', (req,res) => {
+    res.status(200).send('Hola mundo')
 });
 
-
-app.get('/students1/:id', (req,res) => {
-    const index = req.params.id;
-    const listUsersQuery = `SELECT * FROM students where id=${index};`;
-    pool.query(listUsersQuery)
-        .then(data => {
-          console.log("List students: ", data.rows);
-            res.send(data.rows);
-          
-        })
-        .catch(err => {
-            console.error(err);
-            
-    });
-});
-
-app.get('/students2/:name', (req,res) => {
-    const name = req.params.name
-    const listUsersQuery = `SELECT * FROM students WHERE name = '${name}';`
-    pool.query(listUsersQuery)
-        .then(data => {
-            return res.send(data.rows);
-      
-        })
-        .catch(err => {
-            console.error(err);
-          
-        })
-});
-
-app.get('/students3/:lastname', (req,res) => {
-    const lastname = req.params.lastname
-    const listUsersQuery = `SELECT * FROM students WHERE lastname = '${lastname}';`
-    pool.query(listUsersQuery)
-        .then(data => {
-            return res.send(data.rows);
-      
-        })
-        .catch(err => {
-            console.error(err);
-          
-        })
-});
-
-app.post('/students', (req,res) => {
-    const insertUsersQuery = `
-    INSERT INTO students (id, name, lastname, notes) VALUES  
-    (${req.body.id}, '${req.body.name}', '${req.body.lastname}', '${req.body.notes}'); 
+app.post('/products', (req,res) => {
+    const nameProduct=req.body.name;
+    const price=req.body.price;
+    const quantity=req.body.quantity;
+    
+    const inserProducts = `
+    INSERT INTO products (id, nameProduct, price, quantity) VALUES  
+    ('${nameProduct}', '${price}', '${quantity}');       
 `;
 
-    pool.query(insertUsersQuery )
+    pool.query(inserProducts)
         .then(data => {
-            return res.send('insertado');
+            return res.status(201).send('El producto se ha resgistrado correctamente');
         })
         .catch(err => {
             console.error(err);
+            res.status(500).send('Hubo un rerror registrando el producto')
         })
+    
+        
 });
-
-app.put('/students/:id', (req,res) => {
-    const editUsersQuery = 
-    `UPDATE students SET id = ${req.body.id}, name = '${req.body.name}', lastname = '${req.body.lastname}', notes = '${req.body.notes}'
-      WHERE id = ${req.params.id}`
-    console.log(editUsersQuery);
-    pool.query(editUsersQuery)
-        .then(data => {
-            return res.send('editado');
-        })
-        .catch(err => {
-            console.error(err);
-        })
-});
-
-app.delete('/students/:id', (req,res) => {
-    const deleteUserByID = `DELETE FROM students WHERE id = ${req.params.id};`
-    pool.query(deleteUserByID)
-        .then(data => {
-            return res.send('eliminado como tu ex')
-        })
-        .catch(err =>{
-            console.error(err);
-        })
-});
-
-
-
 

@@ -1,5 +1,7 @@
 {
     "version": 2,
+    "name": "petgram-server-camilot12",
+    "alias": ["petgram-api-camilot12"],
     "builds": [{ "src": "index.js", "use": "@vercel/node" }],
     "routes": [{
       "headers": {
