@@ -9,7 +9,7 @@ const pool = new Pool({
     ssl:{rejectUnauthorized: false}
 });
 
-
+//asd
 const listUsersQuery = `CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     nameProduct VARCHAR(50),
