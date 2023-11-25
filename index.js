@@ -15,7 +15,7 @@ const pool = new Pool({
     ssl:{rejectUnauthorized: false}
 });
 
-const API_KEY = process.env.PORT;
+const API_KEY = process.env.API_KEY;
 
 const apiKeyValidation = (req, res, next) => {
     const userApiKey = req.get('USER_API_KEY');
