@@ -25,7 +25,7 @@ const apiKeyValidation = (req, res, next) => {
     else {
         res.status(401).send('Invalid API Key')
     }
-}
+};
 
 app.use(apiKeyValidation);
 
